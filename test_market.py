@@ -6,7 +6,7 @@ UTC=timezone.utc
 def at(value): return datetime.fromisoformat(value).replace(tzinfo=UTC)
 
 def test_route_overlap_and_close():
-    f=FollowSun()
+    f=FollowSun(ROUTE[1:])
     assert f.select(at('2026-10-20T01:00:00')).code=='ASX'
     assert f.select(at('2026-10-20T04:00:00')).code=='ASX'
     # Sydney's official close can include the closing auction; use after it.
@@ -30,7 +30,7 @@ def test_daylight_saving():
     assert session(ny,at('2026-11-02T14:35:00')) is not None
 
 def test_lunch_does_not_handover():
-    f=FollowSun((ROUTE[1],ROUTE[2]))
+    f=FollowSun(tuple(e for e in ROUTE if e.code in ('JPX','HKEX')))
     assert f.select(at('2026-10-20T01:00:00')).code=='JPX'
     e=f.select(at('2026-10-20T03:00:00'))
     assert e.code=='JPX'
@@ -66,3 +66,15 @@ def test_missing_baseline_does_not_invent_volume():
     e,now,frame=fixture()
     frame=frame[frame.index>pd.Timestamp('2026-10-19',tz='UTC')]
     assert readings(e,now,frame,100.77)['status']=='warming'
+
+# AI: Verify the NZ morning gap, overlap, close, holiday and DST calendar.
+def test_nzx_handover_and_calendar():
+    f=FollowSun()
+    assert f.select(at('2026-10-20T20:59:00')) is None
+    assert f.select(at('2026-10-20T21:00:00')).code=='NZX'
+    assert f.select(at('2026-10-21T01:00:00')).code=='NZX'
+    assert f.select(at('2026-10-21T03:45:00')).code=='ASX'
+    nz=ROUTE[0]
+    assert session(nz,at('2026-10-25T22:00:00')) is None  # Labour Day
+    assert session(nz,at('2026-07-20T21:30:00')) is None
+    assert session(nz,at('2026-07-20T22:00:00')) is not None
