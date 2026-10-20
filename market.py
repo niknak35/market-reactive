@@ -21,6 +21,7 @@ class Exchange:
 
 # Locally traded ETF proxies, not exchange-wide aggregate volume.
 ROUTE = (
+    Exchange('NZX', 'XNZE', 'FNZ.NZ', 'New Zealand'),
     Exchange('ASX', 'ASX', 'STW.AX', 'Sydney'),
     Exchange('JPX', 'JPX', '1306.T', 'Tokyo'),
     Exchange('HKEX', 'HKEX', '2800.HK', 'Hong Kong'),
