@@ -5,4 +5,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY app.py market.py ./
 RUN useradd --create-home app && chown -R app:app /app
 USER app
-CMD ["sh", "-c", "uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
+# AI: Fixed service entrypoint expands PORT and forwards shutdown signals.
+ENTRYPOINT ["sh", "-c", "exec uvicorn app:app --host 0.0.0.0 --port ${PORT:-8000} --workers 1"]
