@@ -1,6 +1,6 @@
 # Market Reactive cloud service
 
-Personal ambient display: follows Sydney → Tokyo → Hong Kong → London → New York.
+Personal ambient display: follows New Zealand → Sydney → Tokyo → Hong Kong → London → New York.
 The ESP32 polls this service directly over its saved Wi-Fi. No always-on home computer is needed.
 
 ## Behavior
@@ -15,13 +15,15 @@ The default symbols are **ETF proxies**, not aggregate exchange readings:
 
 | Exchange | Symbol | Proxy |
 |---|---|---|
+| NZX | FNZ.NZ | New Zealand shares |
 | ASX | STW.AX | Australian shares |
 | JPX | 1306.T | Japanese shares |
 | HKEX | 2800.HK | Hong Kong shares |
 | LSE | ISF.L | UK shares |
 | NYSE session | SPY | US shares; ETF trades on NYSE Arca |
 
-All five returned usable price/volume history in local checks on 20 October 2026.
+The original five proxies returned usable price/volume history on 20 October 2026; FNZ.NZ was verified on 21 October 2026.
+New Zealand stays selected until its close, then hands over to Sydney if still open.
 Free data uses the unofficial yfinance/Yahoo route: coverage, delay and availability are not guaranteed.
 This is for your personal display; provider terms apply. A cloud provider may be rate-limited even when a local check works.
 Failures are reported honestly; the service never substitutes simulated data in production.
